@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload File</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background: linear-gradient(135deg, #87ceeb, #4682b4);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .main-container {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 800px;
+      }
+
+      h2 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: bold;
+      }
+
+      .upload-form {
+        text-align: center;
+      }
+
+      .download-section {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        transition: all 0.3s ease;
+        margin: 5px;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+
+      .alert {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      /* Custom file input styling */
+      .custom-file-input::-webkit-file-upload-button {
+        visibility: hidden;
+      }
+
+      .custom-file-input::before {
+        content: "Select file";
+        display: inline-block;
+        background: linear-gradient(top, #f9f9f9, #e3e3e3);
+        border: 1px solid #999;
+        border-radius: 3px;
+        padding: 5px 8px;
+        outline: none;
+        white-space: nowrap;
+        cursor: pointer;
+        text-shadow: 1px 1px #fff;
+        font-weight: 700;
+        font-size: 10pt;
+      }
+
+      .custom-file-input:hover::before {
+        border-color: black;
+      }
+
+      .custom-file-input:active::before {
+        background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <h2>Excel File Upload</h2>
+
+      <form
+        method="post"
+        enctype="multipart/form-data"
+        class="upload-form"
+        id="uploadForm"
+      >
+        {% csrf_token %} {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Upload File</button>
+      </form>
+
+      {% if success_message %}
+      <div class="alert alert-success mt-3">
+        {{ success_message }}
+
+        <div class="download-section">
+          {% if individual_download_url %}
+          <a
+            href="{{ individual_download_url }}"
+            class="btn btn-success"
+            download
+          >
+            <i class="fas fa-download"></i> Individual Borrowers
+          </a>
+          {% endif %} {% if corporate_download_url %}
+          <a href="{{ corporate_download_url }}" class="btn btn-info" download>
+            <i class="fas fa-download"></i> Corporate Borrowers
+          </a>
+          {% endif %} {% if full_download_url %}
+          <a href="{{ full_download_url }}" class="btn btn-secondary" download>
+            <i class="fas fa-download"></i> Full Processed File
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %} {% if error_message %}
+      <div class="alert alert-danger mt-3">{{ error_message }}</div>
+      {% endif %}
+    </div>
+
+  </body>
+</html>
